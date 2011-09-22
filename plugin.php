@@ -43,7 +43,6 @@ class Top_Commenters_Cached extends WP_Widget {
 	 */
 	function Top_Commenters_Cached() {
 
-    	// TODO: update classname and description
 		$widget_opts = array (
 			'classname' => self::name, 
 			'description' => __('A plugin used to demonstrate the WordPress Transients API for an Envato blog series.', self::locale)
@@ -51,9 +50,6 @@ class Top_Commenters_Cached extends WP_Widget {
 		$this->WP_Widget(self::slug, __(self::name, self::locale), $widget_opts);
 		
 		load_plugin_textdomain(self::locale, false, dirname(plugin_basename( __FILE__ ) ) . '/lang/' );
-		
-    	// Load JavaScript and stylesheets
-    	$this->register_scripts_and_styles();
 		
 	} // end constructor
 
@@ -173,44 +169,6 @@ class Top_Commenters_Cached extends WP_Widget {
 	private function strip($obj, $title) {
 		return strip_tags(stripslashes($obj[$title]));
 	} // end strip
-  
-	/**
-	 * Registers and enqueues stylesheets for the administration panel and the
-	 * public facing site.
-	 */
-	private function register_scripts_and_styles() {
-		if(is_admin()) {
-      		$this->load_file(PLUGIN_NAME, '/' . self::slug . '/js/admin.js', true);
-			$this->load_file(PLUGIN_NAME, '/' . self::slug . '/css/admin.css');
-		} else { 
-      		$this->load_file(PLUGIN_NAME, '/' . self::slug . '/js/widget.js', true);
-			$this->load_file(PLUGIN_NAME, '/' . self::slug . '/css/widget.css');
-		} // end if/else
-	} // end register_scripts_and_styles
-
-	/**
-	 * Helper function for registering and enqueueing scripts and styles.
-	 *
-	 * @name	The 	ID to register with WordPress
-	 * @file_path		The path to the actual file
-	 * @is_script		Optional argument for if the incoming file_path is a JavaScript source file.
-	 */
-	private function load_file($name, $file_path, $is_script = false) {
-		
-    	$url = WP_PLUGIN_URL . $file_path;
-		$file = WP_PLUGIN_DIR . $file_path;
-    
-		if(file_exists($file)) {
-			if($is_script) {
-				wp_register_script($name, $url);
-				wp_enqueue_script($name);
-			} else {
-				wp_register_style($name, $url);
-				wp_enqueue_style($name);
-			} // end if
-		} // end if
-    
-	} // end load_file
 	
 } // end class
 add_action('widgets_init', create_function('', 'register_widget("Top_Commenters_Cached");')); 
